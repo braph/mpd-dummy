@@ -1,11 +1,42 @@
-#include <stdio.h>
+/*
+ * mpdummy.c - mpd dummy that invokes the real mpd server
+ *
+ * Copyright (C) 2017 Benjamin Abendroth
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * MPD dummy server that just displays a "Start MPD" entry.
+ *
+ * Useful for stopping/starting the MPD inside ncmpcpp:
+ *
+ *    ~/.ncmpcpp/bindings:
+ *       def_key "S"
+ *          stop
+ *          run_external_command "killall mpd"
+ *          run_external_command "mpdummy"
+ */
+
 #include <err.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
 #include <pthread.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
 #define MPD_HELLO "OK MPD 0.25.0\n"
 #define MPD_STATUS_ANSWER \
@@ -38,29 +69,37 @@ char *MPD_EXECVP[] = { "mpd", 0 };
 int strpre(const char*, const char*);
 void *conn_handler(void *);
 
-
 int main(int argc, char **argv)
 {
+   close(2);
+   close(3);
+
    int server_sock;
    struct sockaddr_in server;
 
    // Socket stuff
-   if ((server_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-      err(1, NULL);
+   for (int try = 0; try <= 5; ++try) {
+      sleep(try);
 
-   int enable = 1;
-   if (setsockopt(server_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
-      err(1, NULL);
+      if ((server_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+         continue;
 
-   server.sin_family = AF_INET;
-   server.sin_addr.s_addr = INADDR_ANY;
-   server.sin_port = htons(6600);
+      int enable = 1;
+      if (setsockopt(server_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
+         continue;
 
-   if (bind(server_sock, (struct sockaddr *) &server, sizeof(server)) < 0)
-      err(1, NULL);
+      server.sin_family = AF_INET;
+      server.sin_addr.s_addr = INADDR_ANY;
+      server.sin_port = htons(6600);
 
-   if (listen(server_sock, 3) < 0)
-      err(1, NULL);
+      if (bind(server_sock, (struct sockaddr *) &server, sizeof(server)) < 0)
+         continue;
+
+      if (listen(server_sock, 3) < 0)
+         continue;
+
+      break;
+   }
 
    // We're listening now, let's fork
    switch(fork()) {
@@ -102,17 +141,14 @@ void * conn_handler(void *client_socket_desc)
       }
 
       if (strpre(command, "playid")) {
-
          /* We're bruteforcing all FDs to shutdown.
           * This also terminates the conn_handler()-threads
           * listening on them.
           *
           * Finally we invoke the real MPD.
           */
-
-         for (sock = 3; sock < MAX_CONNECTIONS; ++sock) {
+         for (sock = 3; sock < MAX_CONNECTIONS; ++sock)
             shutdown(sock, SHUT_RDWR);
-         }
 
          execvp(MPD_EXECVP[0], MPD_EXECVP);
       }
