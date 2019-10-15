@@ -104,8 +104,9 @@ int main(int argc, char **argv)
 		switch (option)
 		{
 			case 'h':
+			case '?':
 				printf("Usage: %s [-h] [-v] [-p port]\n", argv[0]);
-				return 0;
+				return (option == '?');
 			case 'v':
 				verbose = 1;
 				break;
@@ -117,14 +118,6 @@ int main(int argc, char **argv)
 					return 1;
 				}
 				break;
-			case '?':
-				if (optopt == 'p')
-					fprintf(stderr, "Option -%c requires an argument.\n", optopt);
-				else if (isprint(optopt))
-					fprintf(stderr, "Unknown option `-%c'.\n", optopt);
-				else
-					fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
-				return 1;
 			default:
 				abort();
 		}
