@@ -251,10 +251,11 @@ static int cmd_list(int sock, const char *command) {
 	if (argc == 2) {
 		snprintf(answer, sizeof answer, "%s: Start MPD\n", argv[1]);
 		write(sock, answer, strlen(answer));
+		free_char_array(argv, argc);
 		return 0;
 	}
 
-	// TODO: free_char_array?
+	free_char_array(argv, argc);
 	return -1;
 }
 
@@ -270,7 +271,7 @@ static int cmd_commands(int sock, const char *command) {
 }
 
 static int process_mpd_command(int sock, const char *command) {
-	int command_len = strcspn(command, " \n");
+	unsigned int command_len = strcspn(command, " \n");
 
 	const struct mpd_command_t *mpd_command = is_command(command, command_len);
 	if (! mpd_command) {
@@ -284,7 +285,7 @@ static int process_mpd_command(int sock, const char *command) {
 		}
 		return 0;
 	}
-	else if (mpd_command->type == 'f') {
+	else /*if (mpd_command->type == 'f')*/ {
 		int (*func)(int sock, const char *command) = mpd_command->data;
 		return func(sock, command);
 	}
