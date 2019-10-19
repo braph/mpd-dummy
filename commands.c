@@ -1,5 +1,5 @@
 /* ANSI-C code produced by gperf version 3.1 */
-/* Command-line: gperf -m 100 commands.gperf.c  */
+/* Command-line: gperf -m 10000 commands.gperf.c  */
 /* Computed positions: -k'2,$' */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
@@ -76,112 +76,112 @@ hash_command (register const char *str, register size_t len)
 
 static const struct mpd_command_t commands[] =
   {
-#line 46 "commands.gperf.c"
-    {"delete", 's', NULL},
-#line 57 "commands.gperf.c"
-    {"move", 's', NULL},
-#line 66 "commands.gperf.c"
-    {"rm", 's', NULL},
-#line 59 "commands.gperf.c"
-    {"noidle", 's', NULL},
-#line 42 "commands.gperf.c"
-    {"consume", 's', NULL},
-#line 70 "commands.gperf.c"
-    {"sendmessage", 's', NULL},
-#line 45 "commands.gperf.c"
-    {"decoders", 's', NULL},
-#line 54 "commands.gperf.c"
-    {"lsinfo", 's', NULL},
-#line 25 "commands.gperf.c"
-    {"commands",           'f', cmd_commands},
-#line 65 "commands.gperf.c"
-    {"replay_gain_mode", 's', NULL},
-#line 58 "commands.gperf.c"
-    {"next", 's', NULL},
-#line 73 "commands.gperf.c"
-    {"single", 's', NULL},
-#line 64 "commands.gperf.c"
-    {"repeat", 's', NULL},
-#line 34 "commands.gperf.c"
-    {"replay_gain_status", 's', MPD_REPLAY_GAIN_STATUS_ANSWER},
 #line 35 "commands.gperf.c"
-    {"stats",              's', MPD_STATS_ANSWER},
-#line 36 "commands.gperf.c"
-    {"status",             's', MPD_STATUS_ANSWER},
-#line 53 "commands.gperf.c"
-    {"load", 's', NULL},
-#line 75 "commands.gperf.c"
-    {"subscribe", 's', NULL},
-#line 69 "commands.gperf.c"
-    {"searchadd", 's', NULL},
+    {"delete",             's', NULL},
+#line 48 "commands.gperf.c"
+    {"move",               's', NULL},
+#line 63 "commands.gperf.c"
+    {"rm",                 's', NULL},
+#line 50 "commands.gperf.c"
+    {"noidle",             's', NULL},
+#line 30 "commands.gperf.c"
+    {"consume",            's', NULL},
+#line 67 "commands.gperf.c"
+    {"sendmessage",        's', NULL},
+#line 34 "commands.gperf.c"
+    {"decoders",           's', NULL},
+#line 45 "commands.gperf.c"
+    {"lsinfo",             's', NULL},
 #line 29 "commands.gperf.c"
+    {"commands",           'f', cmd_commands},
+#line 61 "commands.gperf.c"
+    {"replay_gain_mode",   's', NULL},
+#line 49 "commands.gperf.c"
+    {"next",               's', NULL},
+#line 70 "commands.gperf.c"
+    {"single",             's', NULL},
+#line 60 "commands.gperf.c"
+    {"repeat",             's', NULL},
+#line 62 "commands.gperf.c"
+    {"replay_gain_status", 's', MPD_REPLAY_GAIN_STATUS_ANSWER},
+#line 71 "commands.gperf.c"
+    {"stats",              's', MPD_STATS_ANSWER},
+#line 72 "commands.gperf.c"
+    {"status",             's', MPD_STATUS_ANSWER},
+#line 44 "commands.gperf.c"
+    {"load",               's', NULL},
+#line 74 "commands.gperf.c"
+    {"subscribe",          's', NULL},
+#line 66 "commands.gperf.c"
+    {"searchadd",          's', NULL},
+#line 51 "commands.gperf.c"
     {"outputs",            's', MPD_OUTPUTS_ANSWER},
 #line 76 "commands.gperf.c"
-    {"toggleoutput", 's', NULL},
-#line 52 "commands.gperf.c"
-    {"listplaylists", 's', NULL},
-#line 28 "commands.gperf.c"
-    {"list",               'f', cmd_list},
-#line 51 "commands.gperf.c"
-    {"listplaylistinfo", 's', NULL},
-#line 44 "commands.gperf.c"
-    {"crossfade", 's', NULL},
-#line 71 "commands.gperf.c"
-    {"setvol", 's', NULL},
-#line 27 "commands.gperf.c"
-    {"find",               's', MPD_FIND_ANSWER},
-#line 62 "commands.gperf.c"
-    {"previous", 's', NULL},
-#line 77 "commands.gperf.c"
-    {"update", 's', NULL},
-#line 49 "commands.gperf.c"
-    {"findadd", 's', NULL},
-#line 38 "commands.gperf.c"
-    {"add", 's', NULL},
-#line 47 "commands.gperf.c"
-    {"disableoutput", 's', NULL},
-#line 33 "commands.gperf.c"
-    {"plchanges",          's', MPD_PLCHANGES_ANSWER},
-#line 48 "commands.gperf.c"
-    {"enableoutput", 's', NULL},
-#line 32 "commands.gperf.c"
-    {"playlistinfo",       's', MPD_PLCHANGES_ANSWER},
-#line 68 "commands.gperf.c"
-    {"search", 's', NULL},
-#line 72 "commands.gperf.c"
-    {"shuffle", 's', NULL},
-#line 67 "commands.gperf.c"
-    {"save", 's', NULL},
-#line 60 "commands.gperf.c"
-    {"pause", 's', NULL},
-#line 50 "commands.gperf.c"
-    {"listall", 's', NULL},
-#line 74 "commands.gperf.c"
-    {"stop", 's', NULL},
-#line 39 "commands.gperf.c"
-    {"channels", 's', NULL},
-#line 63 "commands.gperf.c"
-    {"random", 's', NULL},
-#line 31 "commands.gperf.c"
-    {"playid",             'f', cmd_play},
-#line 56 "commands.gperf.c"
-    {"mixrampdelay", 's', NULL},
-#line 37 "commands.gperf.c"
-    {"tagtypes",           's', MPD_TAGTYPES_ANSWER},
-#line 26 "commands.gperf.c"
-    {"currentsong",        's', MPD_CURRENTSONG_ANSWER},
-#line 55 "commands.gperf.c"
-    {"mixrampdb", 's', NULL},
-#line 40 "commands.gperf.c"
-    {"clear", 's', NULL},
+    {"toggleoutput",       's', NULL},
 #line 43 "commands.gperf.c"
-    {"crop", 's', NULL},
-#line 30 "commands.gperf.c"
-    {"play",               'f', cmd_play},
+    {"listplaylists",      's', NULL},
+#line 40 "commands.gperf.c"
+    {"list",               'f', cmd_list},
+#line 42 "commands.gperf.c"
+    {"listplaylistinfo",   's', NULL},
+#line 32 "commands.gperf.c"
+    {"crossfade",          's', NULL},
+#line 68 "commands.gperf.c"
+    {"setvol",             's', NULL},
+#line 38 "commands.gperf.c"
+    {"find",               's', MPD_FIND_ANSWER},
+#line 58 "commands.gperf.c"
+    {"previous",           's', NULL},
+#line 77 "commands.gperf.c"
+    {"update",             's', NULL},
+#line 39 "commands.gperf.c"
+    {"findadd",            's', NULL},
+#line 25 "commands.gperf.c"
+    {"add",                's', NULL},
+#line 36 "commands.gperf.c"
+    {"disableoutput",      's', NULL},
+#line 57 "commands.gperf.c"
+    {"plchanges",          's', MPD_PLCHANGES_ANSWER},
+#line 37 "commands.gperf.c"
+    {"enableoutput",       's', NULL},
+#line 55 "commands.gperf.c"
+    {"playlistinfo",       's', MPD_PLCHANGES_ANSWER},
+#line 65 "commands.gperf.c"
+    {"search",             's', NULL},
+#line 69 "commands.gperf.c"
+    {"shuffle",            's', NULL},
+#line 64 "commands.gperf.c"
+    {"save",               's', NULL},
+#line 52 "commands.gperf.c"
+    {"pause",              's', NULL},
 #line 41 "commands.gperf.c"
-    {"clearerror", 's', NULL},
-#line 61 "commands.gperf.c"
-    {"playlistsearch", 's', NULL}
+    {"listall",            's', NULL},
+#line 73 "commands.gperf.c"
+    {"stop",               's', NULL},
+#line 26 "commands.gperf.c"
+    {"channels",           's', NULL},
+#line 59 "commands.gperf.c"
+    {"random",             's', NULL},
+#line 54 "commands.gperf.c"
+    {"playid",             'f', cmd_play},
+#line 47 "commands.gperf.c"
+    {"mixrampdelay",       's', NULL},
+#line 75 "commands.gperf.c"
+    {"tagtypes",           's', MPD_TAGTYPES_ANSWER},
+#line 33 "commands.gperf.c"
+    {"currentsong",        's', MPD_CURRENTSONG_ANSWER},
+#line 46 "commands.gperf.c"
+    {"mixrampdb",          's', NULL},
+#line 27 "commands.gperf.c"
+    {"clear",              's', NULL},
+#line 31 "commands.gperf.c"
+    {"crop",               's', NULL},
+#line 53 "commands.gperf.c"
+    {"play",               'f', cmd_play},
+#line 28 "commands.gperf.c"
+    {"clearerror",         's', NULL},
+#line 56 "commands.gperf.c"
+    {"playlistsearch",     's', NULL}
   };
 
 const struct mpd_command_t *
