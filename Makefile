@@ -1,11 +1,12 @@
 PREFIX = /usr
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -Os
 
-build: commands_empty.c
+build: commands.c
 	gcc $(CFLAGS) mpdummy.c -lpthread -o mpdummy
+	strip mpdummy
 
-commands_empty.c:
-	gperf -m 100 commands_empty.gperf.c > commands_empty.c
+commands.c:
+	gperf -m 100 commands.gperf.c > commands.c
 
 install:
 	install -m 0755 mpdummy $(PREFIX)/bin

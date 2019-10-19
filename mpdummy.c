@@ -43,9 +43,6 @@
 #include <sys/stat.h>
 #include <sys/socket.h>
 
-#include "mpd_answers.h"
-#include "commands_empty.c"
-
 #define COMMAND_LEN 1024
 #define STATE_LIST 1
 #define STATE_LIST_OK 2
@@ -66,33 +63,8 @@ static int cmd_list(int, const char *);
 static int cmd_commands(int, const char *);
 static int process_mpd_command(int, const char *);
 
-static struct command_mapping_s {
-	const char *command;
-	char type;
-	void *data;
-} command_mapping[] = {
-	// Alphabetically sorted
-	{ "commands",           'f', cmd_commands },
-	{ "currentsong",        's', MPD_CURRENTSONG_ANSWER },
-	{ "find",               's', MPD_FIND_ANSWER },
-	{ "list",               'f', cmd_list },
-	{ "outputs",            's', MPD_OUTPUTS_ANSWER },
-	{ "play",               'f', cmd_play },
-	{ "playid",             'f', cmd_play },
-	{ "playlistinfo",       's', MPD_PLCHANGES_ANSWER },
-	{ "plchanges",          's', MPD_PLCHANGES_ANSWER },
-	{ "replay_gain_status", 's', MPD_REPLAY_GAIN_STATUS_ANSWER },
-	{ "stats",              's', MPD_STATS_ANSWER },
-	{ "status",             's', MPD_STATUS_ANSWER },
-	{ "tagtypes",           's', MPD_TAGTYPES_ANSWER },
-};
-#define command_mapping_n (sizeof(command_mapping)/sizeof(*command_mapping))
-
-static int command_mapping_cmp(const void *v1, const void *v2) {
-	struct command_mapping_s *s1 = (struct command_mapping_s *) v1;
-	struct command_mapping_s *s2 = (struct command_mapping_s *) v2;
-	return strcmp(s1->command, s2->command);
-}
+#include "mpd_answers.h"
+#include "commands.c"
 
 int main(int argc, char **argv)
 {
@@ -287,19 +259,11 @@ static int cmd_list(int sock, const char *command) {
 }
 
 static int cmd_commands(int sock, const char *command) {
-	int i;
 	char answer[1024];
 
-	for (int i = 0; i < commands_empty_n; ++i) {
-		if (commands_empty[i]) {
-			snprintf(answer, sizeof answer, "command: %s\n", commands_empty[i]);
-			write(sock, answer, strlen(answer));
-		}
-	}
-
-	for (i = 0; i < command_mapping_n; ++i) {
-		snprintf(answer, sizeof answer, "command: %s\n", command_mapping[i].command);
-		write(sock, answer, strlen(answer));
+	for (int i = 0; i < commands_n; ++i) {
+    snprintf(answer, sizeof answer, "command: %s\n", commands[i].name);
+    write(sock, answer, strlen(answer));
 	}
 
 	return 0;
@@ -307,34 +271,23 @@ static int cmd_commands(int sock, const char *command) {
 
 static int process_mpd_command(int sock, const char *command) {
 	int command_len = strcspn(command, " \n");
-	if (is_command_empty(command, command_len)) {
+
+	const struct mpd_command_t *mpd_command = is_command(command, command_len);
+	if (! mpd_command) {
+		log("unknow command: %s\n", command);
+		return COMMAND_UNKNOWN;
+	}
+	else if (mpd_command->type == 's') {
+		if (mpd_command->data != NULL) {
+			const char *s = (const char *) mpd_command->data;
+			write(sock, s, strlen(s));
+		}
 		return 0;
 	}
-
-	char *command_name = strndup(command, command_len);
-	struct command_mapping_s search, *command_mapping_found;
-	search.command = command_name;
-
-	command_mapping_found = bsearch(&search, command_mapping, command_mapping_n,
-			sizeof(struct command_mapping_s), command_mapping_cmp);
-
-	if (command_mapping_found != NULL) {
-		free(command_name);
-
-		if (command_mapping_found->type == 's') {
-			const char *s = (const char *) command_mapping_found->data;
-			write(sock, s, strlen(s));
-			return 0;
-		}
-		else if (command_mapping_found->type == 'f') {
-			int (*func)(int sock, const char *command) = command_mapping_found->data;
-			return func(sock, command);
-		}
+	else if (mpd_command->type == 'f') {
+		int (*func)(int sock, const char *command) = mpd_command->data;
+		return func(sock, command);
 	}
-
-	log("unknow command: %s\n", command_name);
-	free(command_name);
-	return COMMAND_UNKNOWN;
 }
 
 struct list_s {
